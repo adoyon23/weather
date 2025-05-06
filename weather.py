@@ -1,9 +1,15 @@
 from typing import Any
 import httpx
 from mcp.server.fastmcp import FastMCP
+import logging
 
 # Initialize FastMCP server
-mcp = FastMCP("weather")
+PORT = 8000
+mcp = FastMCP("weather", port=PORT)
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Constants
 NWS_API_BASE = "https://api.weather.gov"
@@ -89,6 +95,26 @@ Forecast: {period['detailedForecast']}
 
     return "\n---\n".join(forecasts)
 
+@mcp.resource("weather://{location}")
+async def get_weather_info(location: str) -> str:
+    """Get basic weather information for a location.
+    
+    Args:
+        location: City name or location identifier
+    """
+    # This is a simple example resource that returns static data
+    # In a real application, you might want to fetch this from an API
+    weather_data = {
+        "New York": "Sunny, 72°F",
+        "Los Angeles": "Clear, 85°F",
+        "Chicago": "Partly Cloudy, 65°F",
+        "Miami": "Rainy, 80°F"
+    }
+    
+    return weather_data.get(location, f"Weather information not available for {location}")
+
 if __name__ == "__main__":
     # Initialize and run the server
-    mcp.run(transport='stdio')
+    logger.info(f"Starting weather server on port {PORT}")
+    logger.info(f"Liggubg ssdft")
+    mcp.run(transport='sse')
