@@ -1,25 +1,14 @@
-from typing import Any
-import httpx
 import json
 import os
 import uuid
-from mcp.server.fastmcp import FastMCP
-from mcp.server.fastmcp.prompts import base
-import logging
-
-# Initialize FastMCP server
-PORT = 8000
-mcp = FastMCP("weather", port=PORT)
-
-# Set up logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+import httpx
+import asyncio
+from typing import List, Dict, Any
 
 # Constants
 INSTACART_API_BASE = "https://connect.dev.instacart.tools/idp/v1"
 
-@mcp.tool()
-async def place_grocery_order(items: list[dict]) -> str:
+async def place_grocery_order(items: List[Dict[str, Any]]) -> str:
     """Place a grocery delivery order on Instacart.
     
     Args:
@@ -30,13 +19,13 @@ async def place_grocery_order(items: list[dict]) -> str:
     """
     try:
         # Get Instacart API credentials
-        # instacart_credentials = json.loads(os.environ.get('INSTACART_API_CREDENTIALS', '{}'))
-        # if not instacart_credentials:
-        #     return "Error: Instacart API credentials not found. Please set INSTACART_API_CREDENTIALS environment variable."
+        instacart_credentials = json.loads(os.environ.get('INSTACART_API_CREDENTIALS', '{}'))
+        if not instacart_credentials:
+            return "Error: Instacart API credentials not found. Please set INSTACART_API_CREDENTIALS environment variable."
         
         # Initialize Instacart API client
         headers = {
-            'Authorization': f"Bearer keys.p3qcHSdyp_4q3_V4-IqnsrYr9rcfN5sTbZIRP4_C5uU",
+            'Authorization': f"Bearer {instacart_credentials['api_key']}",
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
@@ -81,14 +70,33 @@ async def place_grocery_order(items: list[dict]) -> str:
                 return f"Error placing order: {response.text}"
             
             recipe_response = response.json()
+            print(recipe_response)
             return f"Order placed successfully! Order ID: {recipe_response.get('products_link_url', 'Unknown')}"
             
     except Exception as e:
-        logger.error(f"Error placing grocery order: {str(e)}")
         return f"Error placing order: {str(e)}"
 
+async def main():
+    # Example grocery items
+    items = [
+        {"name": "Milk", "quantity": 1, "unit": "gallon"},
+        {"name": "Eggs", "quantity": 12, "unit": "each"},
+        {"name": "Bread", "quantity": 1, "unit": "loaf"},
+        {"name": "Apples", "quantity": 5, "unit": "each"},
+        {"name": "Chicken Breast", "quantity": 2, "unit": "lb"}
+    ]
+    
+    # Place the order
+    result = await place_grocery_order(items)
+    print(result)
+
 if __name__ == "__main__":
-    # Initialize and run the server
-    logger.info(f"Starting weather server on port {PORT}")
-    logger.info(f"Liggubg ssdft")
-    mcp.run(transport='stdio')
+    # Check if API credentials are set
+    if not os.environ.get('INSTACART_API_CREDENTIALS'):
+        print("Please set the INSTACART_API_CREDENTIALS environment variable first.")
+        print("Example:")
+        print('export INSTACART_API_CREDENTIALS=\'{"api_key": "your_api_key"}\'')
+        exit(1)
+        
+    # Run the async main function
+    asyncio.run(main()) 
