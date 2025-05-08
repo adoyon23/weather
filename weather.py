@@ -105,13 +105,13 @@ async def place_grocery_order(items: list[dict]) -> str:
     """
     try:
         # Get Instacart API credentials
-        # instacart_credentials = json.loads(os.environ.get('INSTACART_API_CREDENTIALS', '{}'))
-        # if not instacart_credentials:
-        #     return "Error: Instacart API credentials not found. Please set INSTACART_API_CREDENTIALS environment variable."
+        instacart_credentials = os.environ.get('INSTACART_API_CREDENTIALS')
+        if not instacart_credentials:
+            return "Error: Instacart API credentials not found. Please set INSTACART_API_CREDENTIALS environment variable."
         
         # Initialize Instacart API client
         headers = {
-            'Authorization': f"Bearer keys.p3qcHSdyp_4q3_V4-IqnsrYr9rcfN5sTbZIRP4_C5uU",
+            'Authorization': f"Bearer {instacart_credentials}",
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
