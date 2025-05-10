@@ -10,6 +10,10 @@ from mcp.server.fastmcp.prompts import base
 import logging
 from decimal import Decimal
 from typing import TypedDict, NotRequired
+import http.server
+import socketserver
+import threading
+import webbrowser
 
 # Initialize FastMCP server
 PORT = 8000
@@ -397,6 +401,51 @@ def validate_height_and_calculate_bmi(age: int, weight_kg: float, height_cm: flo
 
     Please thank the user for providing their information and share these results with them.
     """
+
+@mcp.tool()
+async def serve_html_page(html_content: str, port: int = 8001) -> str:
+    """Generate and serve an HTML webpage on localhost.
+    
+    Args:
+        html_content: The HTML content to serve
+        port: The port number to serve the page on (default: 8001)
+    """
+    try:
+        # Create a temporary HTML file
+        temp_file = "temp_page.html"
+        with open(temp_file, "w") as f:
+            f.write(html_content)
+        
+        # Create a custom handler that serves our HTML file
+        class CustomHandler(http.server.SimpleHTTPRequestHandler):
+            def do_GET(self):
+                if self.path == '/':
+                    self.path = f'/{temp_file}'
+                return http.server.SimpleHTTPRequestHandler.do_GET(self)
+        
+        # Start the server in a separate thread
+        def run_server():
+            with socketserver.TCPServer(("", port), CustomHandler) as httpd:
+                print(f"Serving at port {port}")
+                httpd.serve_forever()
+        
+        server_thread = threading.Thread(target=run_server, daemon=True)
+        server_thread.start()
+        
+        # Generate the localhost URL
+        url = f"http://localhost:{port}"
+        
+        # Try to open the browser automatically
+        try:
+            webbrowser.open(url)
+        except:
+            pass
+        
+        return f"HTML page is being served at: {url}\nClick the link to view the page in your browser."
+        
+    except Exception as e:
+        logger.error(f"Error serving HTML page: {str(e)}")
+        return f"Error serving HTML page: {str(e)}"
 
 if __name__ == "__main__":
     # Initialize and run the server
