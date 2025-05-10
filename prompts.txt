@@ -1,0 +1,3 @@
+Search DynamoDB in the identity table for userId=user123 to find my target macro nutrient values per day. Then use the Spoonacular API to find 1 meal for the day where the nutritional contents of all the meals close to the target macro nutrient values per meal. 
+I prefer a vegetarian dish. I don't want to spend more than 45 minutes cooking. I also prefer a mostly simple dish and not too many ingredients.
+Present 3 options for this dish. 
