@@ -15,13 +15,13 @@ def collect_user_info() -> str:
     3. Height (in cm)
 
     Instructions:
-    - Ask for only ONE piece of information at a time
-    - Wait for the user's response before asking for the next piece
-    - Use a friendly, conversational tone
+    - First, ask for ALL information at once in a friendly, conversational tone
+    - If any information is missing or invalid, follow up specifically for that information
+    - Use a friendly, conversational tone throughout
     - After collecting all information, calculate and share their BMI
-    - Begin by introducing yourself and asking for their age
+    - Begin by introducing yourself and asking for all information
 
-    Start the conversation by saying: "Hi there! I'm here to collect some basic health information. Could you please tell me your age in years?"
+    Start the conversation by saying: "Hi there! I'm here to collect some basic health information. Could you please provide your age in years, weight in kilograms, and height in centimeters? For example: 'I'm 30 years old, weigh 70 kg, and am 175 cm tall.'"
     """
 
 # Tool to validate age input
@@ -31,7 +31,7 @@ def validate_age(age: int) -> str:
     if age < 0 or age > 120:
         return "That age seems outside the normal human range. Please ask the user to confirm their age or provide a valid age."
 
-    return "Age validated. Now please ask the user for their weight in kilograms (kg)."
+    return "Age validated."
 
 # Tool to validate weight input
 @mcp.tool()
@@ -40,7 +40,7 @@ def validate_weight(weight_kg: float) -> str:
     if weight_kg < 20 or weight_kg > 300:
         return "That weight seems unusual. Please ask the user to confirm their weight in kilograms or provide a valid weight."
 
-    return "Weight validated. Now please ask the user for their height in centimeters (cm)."
+    return "Weight validated."
 
 # Tool to validate height and calculate BMI
 @mcp.tool()
