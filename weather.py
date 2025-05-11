@@ -589,6 +589,59 @@ async def search_recipes_by_nutrients(params: NutrientSearchParams) -> str:
         logger.error(f"Error searching recipes by nutrients: {str(e)}")
         return f"Error searching recipes by nutrients: {str(e)}"
 
+class IngredientSearchParams(TypedDict, total=False):
+    ingredients: str  # Comma-separated list of ingredients
+    number: NotRequired[int]  # Number of results (1-100)
+    ranking: NotRequired[int]  # 1 to maximize used ingredients, 2 to minimize missing ingredients
+    ignorePantry: NotRequired[bool]  # Whether to ignore pantry items
+
+@mcp.tool()
+async def search_recipes_by_ingredients(params: IngredientSearchParams) -> str:
+    """Search for recipes based on available ingredients using the Spoonacular API.
+    
+    Args:
+        params: A dictionary containing:
+            - ingredients: Comma-separated list of ingredients to search for
+            - number: Optional number of results to return (1-100, default: 10)
+            - ranking: Optional ranking strategy (1: maximize used ingredients, 2: minimize missing ingredients)
+            - ignorePantry: Optional flag to ignore pantry items (default: false)
+    """
+    try:
+        # Get Spoonacular API key from environment
+        api_key = os.environ.get('SPOONACULAR_API_KEY')
+        if not api_key:
+            return "Error: Spoonacular API key not found. Please set SPOONACULAR_API_KEY environment variable."
+        
+        # Validate required parameters
+        if 'ingredients' not in params:
+            return "Error: 'ingredients' parameter is required"
+        
+        # Initialize API client
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+        
+        # Make API call
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                'https://api.spoonacular.com/recipes/findByIngredients',
+                headers=headers,
+                params={**params, 'apiKey': api_key},
+                timeout=30.0
+            )
+            
+            if response.status_code != 200:
+                return f"Error searching recipes: {response.text}"
+            
+            # Return formatted results
+            results = response.json()
+            return json.dumps(results, indent=2)
+            
+    except Exception as e:
+        logger.error(f"Error searching recipes by ingredients: {str(e)}")
+        return f"Error searching recipes by ingredients: {str(e)}"
+
 if __name__ == "__main__":
     # Initialize and run the server
     logger.info(f"Starting weather server on port {PORT}")
