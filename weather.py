@@ -466,6 +466,129 @@ async def serve_html_page(data: dict, template_path: str = "templates/default.ht
         logger.error(f"Error serving HTML page: {str(e)}")
         return f"Error serving HTML page: {str(e)}"
 
+class NutrientSearchParams(TypedDict, total=False):
+    minCarbs: NotRequired[float]
+    maxCarbs: NotRequired[float]
+    minProtein: NotRequired[float]
+    maxProtein: NotRequired[float]
+    minCalories: NotRequired[float]
+    maxCalories: NotRequired[float]
+    minFat: NotRequired[float]
+    maxFat: NotRequired[float]
+    minAlcohol: NotRequired[float]
+    maxAlcohol: NotRequired[float]
+    minCaffeine: NotRequired[float]
+    maxCaffeine: NotRequired[float]
+    minCopper: NotRequired[float]
+    maxCopper: NotRequired[float]
+    minCalcium: NotRequired[float]
+    maxCalcium: NotRequired[float]
+    minCholine: NotRequired[float]
+    maxCholine: NotRequired[float]
+    minCholesterol: NotRequired[float]
+    maxCholesterol: NotRequired[float]
+    minFluoride: NotRequired[float]
+    maxFluoride: NotRequired[float]
+    minSaturatedFat: NotRequired[float]
+    maxSaturatedFat: NotRequired[float]
+    minVitaminA: NotRequired[float]
+    maxVitaminA: NotRequired[float]
+    minVitaminC: NotRequired[float]
+    maxVitaminC: NotRequired[float]
+    minVitaminD: NotRequired[float]
+    maxVitaminD: NotRequired[float]
+    minVitaminE: NotRequired[float]
+    maxVitaminE: NotRequired[float]
+    minVitaminK: NotRequired[float]
+    maxVitaminK: NotRequired[float]
+    minVitaminB1: NotRequired[float]
+    maxVitaminB1: NotRequired[float]
+    minVitaminB2: NotRequired[float]
+    maxVitaminB2: NotRequired[float]
+    minVitaminB5: NotRequired[float]
+    maxVitaminB5: NotRequired[float]
+    minVitaminB3: NotRequired[float]
+    maxVitaminB3: NotRequired[float]
+    minVitaminB6: NotRequired[float]
+    maxVitaminB6: NotRequired[float]
+    minVitaminB12: NotRequired[float]
+    maxVitaminB12: NotRequired[float]
+    minFiber: NotRequired[float]
+    maxFiber: NotRequired[float]
+    minFolate: NotRequired[float]
+    maxFolate: NotRequired[float]
+    minFolicAcid: NotRequired[float]
+    maxFolicAcid: NotRequired[float]
+    minIodine: NotRequired[float]
+    minIron: NotRequired[float]
+    maxIron: NotRequired[float]
+    minMagnesium: NotRequired[float]
+    maxMagnesium: NotRequired[float]
+    minManganese: NotRequired[float]
+    maxManganese: NotRequired[float]
+    minPhosphorus: NotRequired[float]
+    maxPhosphorus: NotRequired[float]
+    minPotassium: NotRequired[float]
+    maxPotassium: NotRequired[float]
+    minSelenium: NotRequired[float]
+    maxSelenium: NotRequired[float]
+    minSodium: NotRequired[float]
+    maxSodium: NotRequired[float]
+    minSugar: NotRequired[float]
+    maxSugar: NotRequired[float]
+    minZinc: NotRequired[float]
+    maxZinc: NotRequired[float]
+    offset: NotRequired[int]
+    number: NotRequired[int]
+    random: NotRequired[bool]
+
+@mcp.tool()
+async def search_recipes_by_nutrients(params: NutrientSearchParams) -> str:
+    """Search for recipes based on nutritional requirements using the Spoonacular API.
+    
+    Args:
+        params: A dictionary containing any of the following search parameters:
+            - minCarbs/maxCarbs: Carbohydrate limits in grams
+            - minProtein/maxProtein: Protein limits in grams
+            - minCalories/maxCalories: Calorie limits
+            - minFat/maxFat: Fat limits in grams
+            - Various other nutrient limits (vitamins, minerals, etc.)
+            - offset: Number of results to skip (0-900)
+            - number: Number of results to return (1-100)
+            - random: Whether to return random results within limits
+    """
+    try:
+        # Get Spoonacular API key from environment
+        api_key = os.environ.get('SPOONACULAR_API_KEY')
+        if not api_key:
+            return "Error: Spoonacular API key not found. Please set SPOONACULAR_API_KEY environment variable."
+        
+        # Initialize API client
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+        
+        # Make API call
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                'https://api.spoonacular.com/recipes/findByNutrients',
+                headers=headers,
+                params={**params, 'apiKey': api_key},
+                timeout=30.0
+            )
+            
+            if response.status_code != 200:
+                return f"Error searching recipes: {response.text}"
+            
+            # Return formatted results
+            results = response.json()
+            return json.dumps(results, indent=2)
+            
+    except Exception as e:
+        logger.error(f"Error searching recipes by nutrients: {str(e)}")
+        return f"Error searching recipes by nutrients: {str(e)}"
+
 if __name__ == "__main__":
     # Initialize and run the server
     logger.info(f"Starting weather server on port {PORT}")
