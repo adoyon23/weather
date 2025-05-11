@@ -14,6 +14,7 @@ import http.server
 import socketserver
 import threading
 import webbrowser
+from jinja2 import Template
 
 # Initialize FastMCP server
 PORT = 8000
@@ -402,15 +403,74 @@ def validate_height_and_calculate_bmi(age: int, weight_kg: float, height_cm: flo
     Please thank the user for providing their information and share these results with them.
     """
 
+# Default template for rendering data
+DEFAULT_TEMPLATE = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .data-item {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: white;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ title }}</h1>
+        {% if items %}
+            {% for item in items %}
+                <div class="data-item">
+                    <h3>{{ item.name }}</h3>
+                    <p>{{ item.description }}</p>
+                    {% if item.value %}
+                        <p><strong>Value:</strong> {{ item.value }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No items to display.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
+"""
+
 @mcp.tool()
-async def serve_html_page(html_content: str, port: int = 8001) -> str:
-    """Generate and serve an HTML webpage on localhost.
+async def serve_html_page(data: dict, template: str = DEFAULT_TEMPLATE, port: int = 8001) -> str:
+    """Generate and serve an HTML webpage using Jinja2 templating.
     
     Args:
-        html_content: The HTML content to serve
+        data: A dictionary containing the data to be rendered in the template
+        template: Optional Jinja2 template string (uses default template if not provided)
         port: The port number to serve the page on (default: 8001)
     """
     try:
+        # Create a Jinja2 template and render it with the provided data
+        template = Template(template)
+        html_content = template.render(**data)
+        
         # Create a temporary HTML file
         temp_file = "temp_page.html"
         with open(temp_file, "w") as f:

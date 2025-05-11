@@ -1,491 +1,57 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forest Fusion - Functional Mushroom Chocolates</title>
+    <title>My Data Dashboard</title>
     <style>
-        :root {
-            --primary: #3a5a40;
-            --secondary: #a3b18a;
-            --accent: #588157;
-            --light: #dad7cd;
-            --dark: #344e41;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
         body {
-            background-color: var(--light);
-            color: var(--dark);
+            font-family: Arial, sans-serif;
+            margin: 40px;
             line-height: 1.6;
         }
-        
-        header {
-            background-color: var(--dark);
-            color: white;
-            padding: 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: white;
-            text-decoration: none;
-        }
-        
-        .nav-links {
-            display: flex;
-            list-style: none;
-        }
-        
-        .nav-links li {
-            margin-left: 1.5rem;
-        }
-        
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-        
-        .nav-links a:hover {
-            color: var(--secondary);
-        }
-        
-        .cart-icon {
-            position: relative;
-        }
-        
-        .cart-count {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background-color: var(--accent);
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.8rem;
-        }
-        
-        .hero {
-            height: 60vh;
-            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1612200968241-4a9dcc8eff7d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-align: center;
-        }
-        
-        .hero-content {
+        .container {
             max-width: 800px;
-            padding: 2rem;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
         }
-        
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-        }
-        
-        .btn {
-            display: inline-block;
-            background-color: var(--accent);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            text-decoration: none;
+        .data-item {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: white;
             border-radius: 4px;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-        
-        .btn:hover {
-            background-color: var(--primary);
-        }
-        
-        .main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-        }
-        
-        .section-title {
-            text-align: center;
-            font-size: 2.2rem;
-            margin-bottom: 2rem;
-            color: var(--dark);
-            position: relative;
-        }
-        
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 4px;
-            background-color: var(--accent);
-            margin: 0.5rem auto;
-        }
-        
-        .products {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-        
-        .product-card {
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-10px);
-        }
-        
-        .product-image {
-            height: 200px;
-            width: 100%;
-            object-fit: cover;
-        }
-        
-        .product-info {
-            padding: 1.5rem;
-        }
-        
-        .product-title {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-            color: var(--dark);
-        }
-        
-        .product-description {
-            color: #666;
-            margin-bottom: 1.5rem;
-        }
-        
-        .product-price {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 1rem;
-        }
-        
-        .add-to-cart {
-            width: 100%;
-            cursor: pointer;
-            border: none;
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 4rem;
-        }
-        
-        .feature {
-            text-align: center;
-            padding: 2rem;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        .feature-icon {
-            font-size: 2.5rem;
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
-        
-        .feature-title {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--dark);
-        }
-        
-        .testimonials {
-            margin-top: 4rem;
-        }
-        
-        .testimonial {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        
-        .testimonial-text {
-            font-style: italic;
-            margin-bottom: 1rem;
-        }
-        
-        .testimonial-author {
-            font-weight: 600;
-            color: var(--dark);
-        }
-        
-        footer {
-            background-color: var(--dark);
-            color: white;
-            padding: 4rem 2rem;
-        }
-        
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-        }
-        
-        .footer-title {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: var(--light);
-        }
-        
-        .footer-links {
-            list-style: none;
-        }
-        
-        .footer-links li {
-            margin-bottom: 0.5rem;
-        }
-        
-        .footer-links a {
-            color: var(--secondary);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer-links a:hover {
-            color: white;
-        }
-        
-        .copyright {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .hero p {
-                font-size: 1rem;
-            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <a href="#" class="logo">Forest Fusion</a>
-            <ul class="nav-links">
-                <li><a href="#">Home</a></li>
-                <li><a href="#products">Shop</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Benefits</a></li>
-                <li><a href="#">Contact</a></li>
-                <li class="cart-icon">
-                    <a href="#">Cart <span class="cart-count">0</span></a>
-                </li>
-            </ul>
-        </nav>
-    </header>
-    
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Elevate Your Chocolate Experience</h1>
-            <p>Discover our premium chocolate bars infused with functional mushrooms for wellness benefits. Delicious taste meets nature's superfood.</p>
-            <a href="#products" class="btn">Shop Now</a>
-        </div>
-    </section>
-    
-    <main class="main">
-        <section id="products">
-            <h2 class="section-title">Our Products</h2>
-            <div class="products">
-                <div class="product-card">
-                    <img src="/api/placeholder/400/320" alt="Lion's Mane Chocolate Bar" class="product-image">
-                    <div class="product-info">
-                        <h3 class="product-title">Lion's Mane Dark Chocolate</h3>
-                        <p class="product-description">Premium dark chocolate with Lion's Mane mushroom extract. Supports cognitive function and focus.</p>
-                        <p class="product-price">$14.99</p>
-                        <button class="btn add-to-cart">Add to Cart</button>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <img src="/api/placeholder/400/320" alt="Reishi Chocolate Bar" class="product-image">
-                    <div class="product-info">
-                        <h3 class="product-title">Reishi Relaxation Blend</h3>
-                        <p class="product-description">Milk chocolate with Reishi mushroom for stress relief and immune support. Perfect evening treat.</p>
-                        <p class="product-price">$15.99</p>
-                        <button class="btn add-to-cart">Add to Cart</button>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <img src="/api/placeholder/400/320" alt="Chaga Chocolate Bar" class="product-image">
-                    <div class="product-info">
-                        <h3 class="product-title">Chaga Immune Boost</h3>
-                        <p class="product-description">Rich dark chocolate infused with Chaga mushroom. Packed with antioxidants for immune support.</p>
-                        <p class="product-price">$16.99</p>
-                        <button class="btn add-to-cart">Add to Cart</button>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <img src="/api/placeholder/400/320" alt="Cordyceps Chocolate Bar" class="product-image">
-                    <div class="product-info">
-                        <h3 class="product-title">Cordyceps Energy Blend</h3>
-                        <p class="product-description">Dark chocolate with Cordyceps mushroom extract. Natural energy support for active lifestyles.</p>
-                        <p class="product-price">$15.99</p>
-                        <button class="btn add-to-cart">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <div class="container">
+        <h1>My Data Dashboard</h1>
         
-        <section class="features">
-            <div class="feature">
-                <div class="feature-icon">🍄</div>
-                <h3 class="feature-title">Functional Benefits</h3>
-                <p>Our chocolates contain carefully selected functional mushrooms known for their wellness properties, from cognitive support to immune health.</p>
-            </div>
             
-            <div class="feature">
-                <div class="feature-icon">🌱</div>
-                <h3 class="feature-title">Sustainably Sourced</h3>
-                <p>We work directly with organic farmers to ensure our ingredients are ethically and sustainably harvested with minimal environmental impact.</p>
-            </div>
+                <div class="data-item">
+                    <h3>Temperature</h3>
+                    <p>Current temperature reading</p>
+                    
+                        <p><strong>Value:</strong> 36°F</p>
+                    
+                </div>
             
-            <div class="feature">
-                <div class="feature-icon">🍫</div>
-                <h3 class="feature-title">Premium Chocolate</h3>
-                <p>Our chocolates use only high-quality cacao, carefully crafted to complement the earthy flavors of our functional mushroom extracts.</p>
-            </div>
-        </section>
+                <div class="data-item">
+                    <h3>Humidity</h3>
+                    <p>Current humidity levs</p>
+                    
+                        <p><strong>Value:</strong> 69%</p>
+                    
+                </div>
+            
         
-        <section class="testimonials">
-            <h2 class="section-title">What Our Customers Say</h2>
-            
-            <div class="testimonial">
-                <p class="testimonial-text">"I've been incorporating the Lion's Mane chocolate into my morning routine for a month now, and I've noticed significant improvements in my focus and productivity!"</p>
-                <p class="testimonial-author">- Sarah K.</p>
-            </div>
-            
-            <div class="testimonial">
-                <p class="testimonial-text">"The Reishi chocolate has become my evening ritual. It helps me unwind after a stressful day, and the taste is absolutely divine."</p>
-                <p class="testimonial-author">- Michael T.</p>
-            </div>
-            
-            <div class="testimonial">
-                <p class="testimonial-text">"As a fitness enthusiast, I love the Cordyceps Energy blend. It gives me a subtle boost without the crash you get from caffeine. The chocolate quality is exceptional too!"</p>
-                <p class="testimonial-author">- Jamie R.</p>
-            </div>
-        </section>
-    </main>
-    
-    <footer>
-        <div class="footer-content">
-            <div>
-                <h3 class="footer-title">Forest Fusion</h3>
-                <p>Premium functional mushroom chocolates for wellness and indulgence.</p>
-            </div>
-            
-            <div>
-                <h3 class="footer-title">Quick Links</h3>
-                <ul class="footer-links">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#products">Shop</a></li>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Blog</a></li>
-                </ul>
-            </div>
-            
-            <div>
-                <h3 class="footer-title">Help</h3>
-                <ul class="footer-links">
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Shipping</a></li>
-                    <li><a href="#">Returns</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                </ul>
-            </div>
-            
-            <div>
-                <h3 class="footer-title">Connect With Us</h3>
-                <ul class="footer-links">
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">Facebook</a></li>
-                    <li><a href="#">Twitter</a></li>
-                    <li><a href="#">Newsletter</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="copyright">
-            <p>&copy; 2025 Forest Fusion. All rights reserved. This is a fictional e-commerce store for demonstration purposes only.</p>
-        </div>
-    </footer>
-    
-    <script>
-        // Simple cart functionality
-        const addToCartButtons = document.querySelectorAll('.add-to-cart');
-        const cartCount = document.querySelector('.cart-count');
-        let count = 0;
-        
-        addToCartButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                count++;
-                cartCount.textContent = count;
-                
-                const productName = button.parentElement.querySelector('.product-title').textContent;
-                alert(`Added ${productName} to cart!`);
-            });
-        });
-    </script>
+    </div>
 </body>
 </html>
