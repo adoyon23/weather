@@ -1,0 +1,459 @@
+{
+  `data`: {
+    `days`: [
+      `Monday`,
+      `Tuesday`,
+      `Wednesday`,
+      `Thursday`,
+      `Friday`,
+      `Saturday`,
+      `Sunday`
+    ],
+    `meals`: {
+      `lunch`: [
+        {
+          `id`: `l1`,
+          `fat`: 25,
+          `iron`: 2,
+          `name`: `Chicken Caesar Salad`,
+          `carbs`: 10,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 150,
+          `protein`: 35,
+          `calories`: 420,
+          `vitaminC`: 25,
+          `description`: `Fresh romaine lettuce with grilled chicken, parmesan, and homemade dressing`
+        },
+        {
+          `id`: `l2`,
+          `fat`: 15,
+          `iron`: 4,
+          `name`: `Quinoa Bowl`,
+          `carbs`: 65,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 100,
+          `protein`: 18,
+          `calories`: 450,
+          `vitaminC`: 30,
+          `description`: `Protein-packed quinoa with roasted vegetables and tahini dressing`
+        },
+        {
+          `id`: `l3`,
+          `fat`: 12,
+          `iron`: 3,
+          `name`: `Turkey Wrap`,
+          `carbs`: 45,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 80,
+          `protein`: 30,
+          `calories`: 400,
+          `vitaminC`: 15,
+          `description`: `Whole wheat wrap with sliced turkey, avocado, and fresh vegetables`
+        }
+      ],
+      `dinner`: [
+        {
+          `id`: `d1`,
+          `fat`: 22,
+          `iron`: 2,
+          `name`: `Grilled Salmon`,
+          `carbs`: 45,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 50,
+          `protein`: 40,
+          `calories`: 550,
+          `vitaminC`: 40,
+          `description`: `Wild-caught salmon with steamed broccoli and brown rice`
+        },
+        {
+          `id`: `d2`,
+          `fat`: 12,
+          `iron`: 5,
+          `name`: `Vegetable Stir Fry`,
+          `carbs`: 70,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 200,
+          `protein`: 20,
+          `calories`: 480,
+          `vitaminC`: 60,
+          `description`: `Fresh vegetables stir-fried with tofu and served over rice noodles`
+        },
+        {
+          `id`: `d3`,
+          `fat`: 18,
+          `iron`: 3,
+          `name`: `Baked Chicken`,
+          `carbs`: 35,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 60,
+          `protein`: 45,
+          `calories`: 520,
+          `vitaminC`: 30,
+          `description`: `Herb-roasted chicken breast with sweet potato and green beans`
+        }
+      ],
+      `breakfast`: [
+        {
+          `id`: `b1`,
+          `fat`: 8,
+          `iron`: 2,
+          `name`: `Oatmeal with Berries`,
+          `carbs`: 60,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 120,
+          `protein`: 10,
+          `calories`: 350,
+          `vitaminC`: 15,
+          `description`: `Hearty oatmeal topped with fresh berries and a drizzle of honey`
+        },
+        {
+          `id`: `b2`,
+          `fat`: 20,
+          `iron`: 3,
+          `name`: `Avocado Toast`,
+          `carbs`: 35,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 80,
+          `protein`: 15,
+          `calories`: 380,
+          `vitaminC`: 10,
+          `description`: `Whole grain toast topped with avocado, cherry tomatoes, and a poached egg`
+        },
+        {
+          `id`: `b3`,
+          `fat`: 10,
+          `iron`: 1,
+          `name`: `Greek Yogurt Parfait`,
+          `carbs`: 40,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 250,
+          `protein`: 20,
+          `calories`: 320,
+          `vitaminC`: 20,
+          `description`: `Creamy Greek yogurt layered with granola and mixed berries`
+        }
+      ]
+    },
+    `title`: `Weekly Meal Planner`,
+    `subtitle`: `Select your meals for the week and track your nutrition`,
+    `daily_rda`: {
+      `iron`: 18,
+      `calcium`: 1000,
+      `vitamin_c`: 90
+    },
+    `current_day`: `Monday`,
+    `chart_titles`: {
+      `daily_rda`: `Daily Recommended Values`,
+      `macro_distribution`: `Macronutrient Distribution`
+    },
+    `macro_labels`: {
+      `fat`: `Fat`,
+      `carbs`: `Carbs`,
+      `protein`: `Protein`
+    },
+    `selected_meals`: {
+      `friday`: {
+        `lunch`: {
+          `id`: `l1`,
+          `fat`: 25,
+          `iron`: 2,
+          `name`: `Chicken Caesar Salad`,
+          `carbs`: 10,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 150,
+          `protein`: 35,
+          `calories`: 420,
+          `vitaminC`: 25,
+          `description`: `Fresh romaine lettuce with grilled chicken, parmesan, and homemade dressing`
+        },
+        `dinner`: {
+          `id`: `d3`,
+          `fat`: 18,
+          `iron`: 3,
+          `name`: `Baked Chicken`,
+          `carbs`: 35,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 60,
+          `protein`: 45,
+          `calories`: 520,
+          `vitaminC`: 30,
+          `description`: `Herb-roasted chicken breast with sweet potato and green beans`
+        },
+        `breakfast`: {
+          `id`: `b2`,
+          `fat`: 20,
+          `iron`: 3,
+          `name`: `Avocado Toast`,
+          `carbs`: 35,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 80,
+          `protein`: 15,
+          `calories`: 380,
+          `vitaminC`: 10,
+          `description`: `Whole grain toast topped with avocado, cherry tomatoes, and a poached egg`
+        }
+      },
+      `monday`: {
+        `lunch`: {
+          `id`: `l1`,
+          `fat`: 25,
+          `iron`: 2,
+          `name`: `Chicken Caesar Salad`,
+          `carbs`: 10,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 150,
+          `protein`: 35,
+          `calories`: 420,
+          `vitaminC`: 25,
+          `description`: `Fresh romaine lettuce with grilled chicken, parmesan, and homemade dressing`
+        },
+        `dinner`: {
+          `id`: `d1`,
+          `fat`: 22,
+          `iron`: 2,
+          `name`: `Grilled Salmon`,
+          `carbs`: 45,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 50,
+          `protein`: 40,
+          `calories`: 550,
+          `vitaminC`: 40,
+          `description`: `Wild-caught salmon with steamed broccoli and brown rice`
+        },
+        `breakfast`: {
+          `id`: `b1`,
+          `fat`: 8,
+          `iron`: 2,
+          `name`: `Oatmeal with Berries`,
+          `carbs`: 60,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 120,
+          `protein`: 10,
+          `calories`: 350,
+          `vitaminC`: 15,
+          `description`: `Hearty oatmeal topped with fresh berries and a drizzle of honey`
+        }
+      },
+      `sunday`: {
+        `lunch`: {
+          `id`: `l3`,
+          `fat`: 12,
+          `iron`: 3,
+          `name`: `Turkey Wrap`,
+          `carbs`: 45,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 80,
+          `protein`: 30,
+          `calories`: 400,
+          `vitaminC`: 15,
+          `description`: `Whole wheat wrap with sliced turkey, avocado, and fresh vegetables`
+        },
+        `dinner`: {
+          `id`: `d2`,
+          `fat`: 12,
+          `iron`: 5,
+          `name`: `Vegetable Stir Fry`,
+          `carbs`: 70,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 200,
+          `protein`: 20,
+          `calories`: 480,
+          `vitaminC`: 60,
+          `description`: `Fresh vegetables stir-fried with tofu and served over rice noodles`
+        },
+        `breakfast`: {
+          `id`: `b1`,
+          `fat`: 8,
+          `iron`: 2,
+          `name`: `Oatmeal with Berries`,
+          `carbs`: 60,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 120,
+          `protein`: 10,
+          `calories`: 350,
+          `vitaminC`: 15,
+          `description`: `Hearty oatmeal topped with fresh berries and a drizzle of honey`
+        }
+      },
+      `tuesday`: {
+        `lunch`: {
+          `id`: `l2`,
+          `fat`: 15,
+          `iron`: 4,
+          `name`: `Quinoa Bowl`,
+          `carbs`: 65,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 100,
+          `protein`: 18,
+          `calories`: 450,
+          `vitaminC`: 30,
+          `description`: `Protein-packed quinoa with roasted vegetables and tahini dressing`
+        },
+        `dinner`: {
+          `id`: `d2`,
+          `fat`: 12,
+          `iron`: 5,
+          `name`: `Vegetable Stir Fry`,
+          `carbs`: 70,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 200,
+          `protein`: 20,
+          `calories`: 480,
+          `vitaminC`: 60,
+          `description`: `Fresh vegetables stir-fried with tofu and served over rice noodles`
+        },
+        `breakfast`: {
+          `id`: `b2`,
+          `fat`: 20,
+          `iron`: 3,
+          `name`: `Avocado Toast`,
+          `carbs`: 35,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 80,
+          `protein`: 15,
+          `calories`: 380,
+          `vitaminC`: 10,
+          `description`: `Whole grain toast topped with avocado, cherry tomatoes, and a poached egg`
+        }
+      },
+      `saturday`: {
+        `lunch`: {
+          `id`: `l2`,
+          `fat`: 15,
+          `iron`: 4,
+          `name`: `Quinoa Bowl`,
+          `carbs`: 65,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 100,
+          `protein`: 18,
+          `calories`: 450,
+          `vitaminC`: 30,
+          `description`: `Protein-packed quinoa with roasted vegetables and tahini dressing`
+        },
+        `dinner`: {
+          `id`: `d2`,
+          `fat`: 12,
+          `iron`: 5,
+          `name`: `Vegetable Stir Fry`,
+          `carbs`: 70,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 200,
+          `protein`: 20,
+          `calories`: 480,
+          `vitaminC`: 60,
+          `description`: `Fresh vegetables stir-fried with tofu and served over rice noodles`
+        },
+        `breakfast`: {
+          `id`: `b3`,
+          `fat`: 10,
+          `iron`: 1,
+          `name`: `Greek Yogurt Parfait`,
+          `carbs`: 40,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 250,
+          `protein`: 20,
+          `calories`: 320,
+          `vitaminC`: 20,
+          `description`: `Creamy Greek yogurt layered with granola and mixed berries`
+        }
+      },
+      `thursday`: {
+        `lunch`: {
+          `id`: `l2`,
+          `fat`: 15,
+          `iron`: 4,
+          `name`: `Quinoa Bowl`,
+          `carbs`: 65,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 100,
+          `protein`: 18,
+          `calories`: 450,
+          `vitaminC`: 30,
+          `description`: `Protein-packed quinoa with roasted vegetables and tahini dressing`
+        },
+        `dinner`: {
+          `id`: `d1`,
+          `fat`: 22,
+          `iron`: 2,
+          `name`: `Grilled Salmon`,
+          `carbs`: 45,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 50,
+          `protein`: 40,
+          `calories`: 550,
+          `vitaminC`: 40,
+          `description`: `Wild-caught salmon with steamed broccoli and brown rice`
+        },
+        `breakfast`: {
+          `id`: `b1`,
+          `fat`: 8,
+          `iron`: 2,
+          `name`: `Oatmeal with Berries`,
+          `carbs`: 60,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 120,
+          `protein`: 10,
+          `calories`: 350,
+          `vitaminC`: 15,
+          `description`: `Hearty oatmeal topped with fresh berries and a drizzle of honey`
+        }
+      },
+      `wednesday`: {
+        `lunch`: {
+          `id`: `l3`,
+          `fat`: 12,
+          `iron`: 3,
+          `name`: `Turkey Wrap`,
+          `carbs`: 45,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 80,
+          `protein`: 30,
+          `calories`: 400,
+          `vitaminC`: 15,
+          `description`: `Whole wheat wrap with sliced turkey, avocado, and fresh vegetables`
+        },
+        `dinner`: {
+          `id`: `d3`,
+          `fat`: 18,
+          `iron`: 3,
+          `name`: `Baked Chicken`,
+          `carbs`: 35,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 60,
+          `protein`: 45,
+          `calories`: 520,
+          `vitaminC`: 30,
+          `description`: `Herb-roasted chicken breast with sweet potato and green beans`
+        },
+        `breakfast`: {
+          `id`: `b3`,
+          `fat`: 10,
+          `iron`: 1,
+          `name`: `Greek Yogurt Parfait`,
+          `carbs`: 40,
+          `image`: `/api/placeholder/400/300`,
+          `calcium`: 250,
+          `protein`: 20,
+          `calories`: 320,
+          `vitaminC`: 20,
+          `description`: `Creamy Greek yogurt layered with granola and mixed berries`
+        }
+      }
+    },
+    `nutrition_labels`: {
+      `fat`: `Fat`,
+      `carbs`: `Carbohydrates`,
+      `protein`: `Protein`,
+      `total_calories`: `Total Calories`
+    },
+    `meal_section_title`: `Your Suggested Meals`,
+    `micronutrient_labels`: {
+      `iron`: `Iron`,
+      `calcium`: `Calcium`,
+      `vitamin_c`: `Vitamin C`
+    },
+    `nutrition_section_title`: `Daily Nutrition Breakdown`
+  },
+  `port`: 8001,
+  `template_path`: `templates/default.html`
+}

@@ -1,57 +1,781 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Data Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Meal Planner</title>
     <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-light: #81C784;
+            --primary-dark: #388E3C;
+            --accent: #FF9800;
+            --text: #333;
+            --text-light: #757575;
+            --light-bg: #f5f5f5;
+            --white: #fff;
+            --shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+            color: var(--text);
+            background-color: var(--light-bg);
             padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
         h1 {
-            color: #333;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
         }
-        .data-item {
-            margin: 10px 0;
-            padding: 10px;
-            background-color: white;
+        
+        .subheading {
+            color: var(--text-light);
+            font-weight: normal;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        @media (min-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .meal-section {
+                width: 100%;
+            }
+            
+            .nutrition-section {
+                width: 100%;
+            }
+        }
+        
+        .section-title {
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+        }
+        
+        .meal-section, .nutrition-section {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .day-card {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .day-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 15px;
+            font-weight: bold;
+        }
+        
+        .meals {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .meal-card {
+            flex: 1;
+            min-width: 300px;
+            max-width: 350px;
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .meal-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .meal-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .meal-content {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .meal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .meal-title {
+            font-weight: bold;
+            color: var(--text);
+            font-size: 1.2rem;
+            flex: 1;
+            min-height: 2.8em;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .meal-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+
+        .meal-nutrition {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+
+        .nutrition-badge {
+            background-color: var(--light-bg);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .swap-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: auto;
+            flex-shrink: 0;
+        }
+
+        .swap-btn:hover {
+            background-color: #F57C00;
+        }
+
+        .alternatives {
+            display: none;
+            background-color: var(--light-bg);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+            flex-shrink: 0;
+        }
+
+        .alternatives.show {
+            display: block;
+        }
+
+        .alternative-meal {
+            background-color: var(--white);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .alternative-meal:hover {
+            background-color: #f0f8ff;
+        }
+
+        .alternative-meal:last-child {
+            margin-bottom: 0;
+        }
+        
+        .nutrition-section {
+            position: sticky;
+            top: 20px;
+        }
+        
+        .nutrition-summary {
+            margin-bottom: 30px;
+        }
+        
+        .nutrition-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .nutrition-row:last-child {
+            border-bottom: none;
+        }
+        
+        .nutrition-name {
+            font-weight: bold;
+        }
+        
+        .macro-chart {
+            margin-top: 30px;
+        }
+        
+        .chart-title {
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 200px;
+            margin-bottom: 20px;
+        }
+        
+        .macro-bars {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: flex-end;
+            height: 200px;
+        }
+        
+        .macro-bar {
+            width: 60px;
+            background-color: var(--primary-light);
+            position: relative;
+            border-radius: 5px 5px 0 0;
+            transition: height 0.5s;
+        }
+        
+        .bar-protein {
+            background-color: #F44336;
+        }
+        
+        .bar-carbs {
+            background-color: #2196F3;
+        }
+        
+        .bar-fat {
+            background-color: #FFC107;
+        }
+        
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            margin-right: 5px;
+            border-radius: 3px;
+        }
+        
+        .protein-color {
+            background-color: #F44336;
+        }
+        
+        .carbs-color {
+            background-color: #2196F3;
+        }
+        
+        .fat-color {
+            background-color: #FFC107;
+        }
+        
+        .pie-chart {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #F44336 0% 30%, 
+                #2196F3 30% 75%, 
+                #FFC107 75% 100%
+            );
+            margin: 0 auto;
+        }
+        
+        .daily-rda {
+            margin-top: 30px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #e0e0e0;
             border-radius: 4px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 4px;
+            transition: width 0.5s;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .day-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .nav-btn:disabled {
+            background-color: var(--text-light);
+            cursor: not-allowed;
+        }
+
+        .current-day {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px 0;
+        }
+
+        .section-header h2 {
+            margin: 0;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-btn.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            max-height: 2000px;
+            opacity: 1;
+            overflow: hidden;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .meals-container {
+            padding: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>My Data Dashboard</h1>
+        <header>
+            <h1>Weekly Meal Planner</h1>
+            <p class="subheading">Select your meals for the week and track your nutrition</p>
+        </header>
         
-            
-                <div class="data-item">
-                    <h3>Temperature</h3>
-                    <p>Current temperature reading</p>
-                    
-                        <p><strong>Value:</strong> 36°F</p>
-                    
+        <div class="content">
+            <section class="meal-section">
+                <div class="section-header" onclick="toggleSection('meal-section')">
+                    <h2 class="section-title">Your Suggested Meals</h2>
+                    <button class="toggle-btn" id="meal-section-toggle">▼</button>
                 </div>
-            
-                <div class="data-item">
-                    <h3>Humidity</h3>
-                    <p>Current humidity levs</p>
-                    
-                        <p><strong>Value:</strong> 69%</p>
-                    
+                <div class="section-content" id="meal-section-content">
+                    <div class="day-navigation">
+                        <button class="nav-btn" id="prev-day">Previous Day</button>
+                        <span class="current-day" id="current-day-display">Monday</span>
+                        <button class="nav-btn" id="next-day">Next Day</button>
+                    </div>
+                    <div class="meals" id="meals-container">
+                        <!-- Meals will be populated via JavaScript -->
+                    </div>
                 </div>
+            </section>
             
-        
+            <section class="nutrition-section">
+                <div class="section-header" onclick="toggleSection('nutrition-section')">
+                    <h2 class="section-title">Daily Nutrition Breakdown</h2>
+                    <button class="toggle-btn" id="nutrition-section-toggle">▼</button>
+                </div>
+                <div class="section-content" id="nutrition-section-content">
+                    <div class="nutrition-summary">
+                        <div class="nutrition-row">
+                            <span class="nutrition-name">Total Calories</span>
+                            <span class="nutrition-value" id="total-calories">0</span>
+                        </div>
+                        <div class="nutrition-row">
+                            <span class="nutrition-name">Protein</span>
+                            <span class="nutrition-value" id="total-protein">0g</span>
+                        </div>
+                        <div class="nutrition-row">
+                            <span class="nutrition-name">Carbohydrates</span>
+                            <span class="nutrition-value" id="total-carbs">0g</span>
+                        </div>
+                        <div class="nutrition-row">
+                            <span class="nutrition-name">Fat</span>
+                            <span class="nutrition-value" id="total-fat">0g</span>
+                        </div>
+                    </div>
+                    
+                    <div class="macro-chart">
+                        <h3 class="chart-title">Macronutrient Distribution</h3>
+                        <div class="chart-container">
+                            <div class="macro-bars">
+                                <div class="macro-bar bar-protein" id="protein-bar" style="height: 0%;">
+                                    <div class="bar-value" id="protein-percent">0%</div>
+                                    <div class="bar-label">Protein</div>
+                                </div>
+                                <div class="macro-bar bar-carbs" id="carbs-bar" style="height: 0%;">
+                                    <div class="bar-value" id="carbs-percent">0%</div>
+                                    <div class="bar-label">Carbs</div>
+                                </div>
+                                <div class="macro-bar bar-fat" id="fat-bar" style="height: 0%;">
+                                    <div class="bar-value" id="fat-percent">0%</div>
+                                    <div class="bar-label">Fat</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-color protein-color"></div>
+                                <span>Protein</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color carbs-color"></div>
+                                <span>Carbs</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color fat-color"></div>
+                                <span>Fat</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="daily-rda">
+                        <h3 class="chart-title">Daily Recommended Values</h3>
+                        
+                        <div class="progress-label">
+                            <span>Vitamin C</span>
+                            <span id="vitamin-c-percent">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="vitamin-c-bar" style="width: 0%"></div>
+                        </div>
+                        
+                        <div class="progress-label">
+                            <span>Iron</span>
+                            <span id="iron-percent">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="iron-bar" style="width: 0%"></div>
+                        </div>
+                        
+                        <div class="progress-label">
+                            <span>Calcium</span>
+                            <span id="calcium-percent">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="calcium-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
+
+    <script>
+        // Sample meal data - now using Jinja2 template variables
+        const meals = JSON.parse('{"breakfast": [{"calcium": 43, "calories": 252, "carbs": 29, "description": "Hearty granola with coconut, lemon zest, and honey", "fat": 14, "id": "b1", "image": "https://img.spoonacular.com/recipes/649567-312x231.jpg", "iron": 2, "name": "Lemon Coconut Granola", "protein": 6, "vitaminC": 4}, {"calcium": 195, "calories": 288, "carbs": 8, "description": "Delicious quiche with fresh asparagus and cheese", "fat": 25, "id": "b2", "image": "https://img.spoonacular.com/recipes/632949-312x231.jpg", "iron": 1, "name": "Asparagus Quiche", "protein": 9, "vitaminC": 14}, {"calcium": 250, "calories": 320, "carbs": 40, "description": "Creamy Greek yogurt layered with granola and mixed berries", "fat": 10, "id": "b3", "image": "https://img.spoonacular.com/recipes/649567-312x231.jpg", "iron": 1, "name": "Greek Yogurt Parfait", "protein": 20, "vitaminC": 20}], "dinner": [{"calcium": 189, "calories": 397, "carbs": 48, "description": "Bow-tie pasta with peas, ham and cream sauce", "fat": 16, "id": "d1", "image": "https://img.spoonacular.com/recipes/642583-312x231.jpg", "iron": 1, "name": "Farfalle with Peas", "protein": 15, "vitaminC": 15}, {"calcium": 70, "calories": 633, "carbs": 74, "description": "Flavorful curry with vegetables and rice", "fat": 28, "id": "d2", "image": "https://img.spoonacular.com/recipes/660185-312x231.jpg", "iron": 4, "name": "Singapore Curry", "protein": 23, "vitaminC": 8}, {"calcium": 60, "calories": 520, "carbs": 35, "description": "Herb-roasted chicken breast with sweet potato and green beans", "fat": 18, "id": "d3", "image": "https://img.spoonacular.com/recipes/642583-312x231.jpg", "iron": 3, "name": "Baked Chicken", "protein": 45, "vitaminC": 30}], "lunch": [{"calcium": 189, "calories": 397, "carbs": 48, "description": "Bow-tie pasta with peas, ham and cream sauce", "fat": 16, "id": "l1", "image": "https://img.spoonacular.com/recipes/642583-312x231.jpg", "iron": 1, "name": "Farfalle with Peas", "protein": 15, "vitaminC": 15}, {"calcium": 70, "calories": 633, "carbs": 74, "description": "Flavorful curry with vegetables and rice", "fat": 28, "id": "l2", "image": "https://img.spoonacular.com/recipes/660185-312x231.jpg", "iron": 4, "name": "Singapore Curry", "protein": 23, "vitaminC": 8}, {"calcium": 150, "calories": 420, "carbs": 10, "description": "Fresh romaine lettuce with grilled chicken, parmesan, and homemade dressing", "fat": 25, "id": "l3", "image": "https://img.spoonacular.com/recipes/642583-312x231.jpg", "iron": 2, "name": "Chicken Caesar Salad", "protein": 35, "vitaminC": 25}]}');
+        
+        // Days of the week
+        const days = JSON.parse('["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]');
+        
+        // Map to track selected meals
+        const selectedMeals = JSON.parse('{"friday": {"breakfast": {"calcium": 195, "calories": 288, "carbs": 8, "description": "Delicious quiche with fresh asparagus and cheese", "fat": 25, "id": "b2", "image": "https://img.spoonacular.com/recipes/632949-312x231.jpg", "iron": 1, "name": "Asparagus Quiche", "protein": 9, "vitaminC": 14}, "dinner": {"calcium": 60, "calories": 520, "carbs": 35, "description": "Herb-roasted chicken breast with sweet potato and green beans", "fat": 18, "id": "d3", "image": "https://img.spoonacular.com/recipes/642583-312x231.jpg", "iron": 3, "name": "Baked Chicken", "protein": 45, "vitaminC": 30}, "lunch": {"calcium": 189, "calories": 397, "carbs": 48, "description": "Bow-tie pasta with peas, ham and cream sauce", "fat": 16, "id": "l1", "image": "https://img.spoonacular.com/recipes/642583-312x231.jpg", "iron": 1, "name": "Farfalle with Peas", "protein": 15, "vitaminC": 15}}, "monday": {"breakfast": {"calcium": 43, "calories": 252, "carbs": 29, "description": "Hearty granola with coconut, lemon zest, and honey", "fat": 14, "id": "b1", "image": "https://img.spoonacular.com/recipes/649567-312x231.jpg", "iron": 2, "name": "Lemon Coconut Granola", "protein": 6, "vitaminC": 4}, "dinner": {"calcium": 189, "calories": 397, "carbs": 48, "description": "Bow-tie pasta with peas, ham and cream sauce", "fat": 16, "id": "d1", "image": "https://img.spoonacular.com/recipes/642583-312x231.jpg", "iron": 1, "name": "Farfalle with Peas", "protein": 15, "vitaminC": 15}, "lunch": {"calcium": 189, "calories": 397, "carbs": 48, "description": "Bow-tie pasta with peas, ham and cream sauce", "fat": 16, "id": "l1", "image": "https://img.spoonacular.com/recipes/642583-312x231.jpg", "iron": 1, "name": "Farfalle with Peas", "protein": 15, "vitaminC": 15}}, "saturday": {"breakfast": {"calcium": 250, "calories": 320, "carbs": 40, "description": "Creamy Greek yogurt layered with granola and mixed berries", "fat": 10, "id": "b3", "image": "https://img.spoonacular.com/recipes/649567-312x231.jpg", "iron": 1, "name": "Greek Yogurt Parfait", "protein": 20, "vitaminC": 20}, "dinner": {"calcium": 70, "calories": 633, "carbs": 74, "description": "Flavorful curry with vegetables and rice", "fat": 28, "id": "d2", "image": "https://img.spoonacular.com/recipes/660185-312x231.jpg", "iron": 4, "name": "Singapore Curry", "protein": 23, "vitaminC": 8}, "lunch": {"calcium": 70, "calories": 633, "carbs": 74, "description": "Flavorful curry with vegetables and rice", "fat": 28, "id": "l2", "image": "https://img.spoonacular.com/recipes/660185-312x231.jpg", "iron": 4, "name": "Singapore Curry", "protein": 23, "vitaminC": 8}}, "sunday": {"breakfast": {"calcium": 43, "calories": 252, "carbs": 29, "description": "Hearty granola with coconut, lemon zest, and honey", "fat": 14, "id": "b1", "image": "https://img.spoonacular.com/recipes/649567-312x231.jpg", "iron": 2, "name": "Lemon Coconut Granola", "protein": 6, "vitaminC": 4}, "dinner": {"calcium": 60, "calories": 520, "carbs": 35, "description": "Herb-roasted chicken breast with sweet potato and green beans", "fat": 18, "id": "d3", "image": "https://img.spoonacular.com/recipes/642583-312x231.jpg", "iron": 3, "name": "Baked Chicken", "protein": 45, "vitaminC": 30}, "lunch": {"calcium": 150, "calories": 420, "carbs": 10, "description": "Fresh romaine lettuce with grilled chicken, parmesan, and homemade dressing", "fat": 25, "id": "l3", "image": "https://img.spoonacular.com/recipes/642583-312x231.jpg", "iron": 2, "name": "Chicken Caesar Salad", "protein": 35, "vitaminC": 25}}, "thursday": {"breakfast": {"calcium": 43, "calories": 252, "carbs": 29, "description": "Hearty granola with coconut, lemon zest, and honey", "fat": 14, "id": "b1", "image": "https://img.spoonacular.com/recipes/649567-312x231.jpg", "iron": 2, "name": "Lemon Coconut Granola", "protein": 6, "vitaminC": 4}, "dinner": {"calcium": 189, "calories": 397, "carbs": 48, "description": "Bow-tie pasta with peas, ham and cream sauce", "fat": 16, "id": "d1", "image": "https://img.spoonacular.com/recipes/642583-312x231.jpg", "iron": 1, "name": "Farfalle with Peas", "protein": 15, "vitaminC": 15}, "lunch": {"calcium": 70, "calories": 633, "carbs": 74, "description": "Flavorful curry with vegetables and rice", "fat": 28, "id": "l2", "image": "https://img.spoonacular.com/recipes/660185-312x231.jpg", "iron": 4, "name": "Singapore Curry", "protein": 23, "vitaminC": 8}}, "tuesday": {"breakfast": {"calcium": 195, "calories": 288, "carbs": 8, "description": "Delicious quiche with fresh asparagus and cheese", "fat": 25, "id": "b2", "image": "https://img.spoonacular.com/recipes/632949-312x231.jpg", "iron": 1, "name": "Asparagus Quiche", "protein": 9, "vitaminC": 14}, "dinner": {"calcium": 70, "calories": 633, "carbs": 74, "description": "Flavorful curry with vegetables and rice", "fat": 28, "id": "d2", "image": "https://img.spoonacular.com/recipes/660185-312x231.jpg", "iron": 4, "name": "Singapore Curry", "protein": 23, "vitaminC": 8}, "lunch": {"calcium": 70, "calories": 633, "carbs": 74, "description": "Flavorful curry with vegetables and rice", "fat": 28, "id": "l2", "image": "https://img.spoonacular.com/recipes/660185-312x231.jpg", "iron": 4, "name": "Singapore Curry", "protein": 23, "vitaminC": 8}}, "wednesday": {"breakfast": {"calcium": 250, "calories": 320, "carbs": 40, "description": "Creamy Greek yogurt layered with granola and mixed berries", "fat": 10, "id": "b3", "image": "https://img.spoonacular.com/recipes/649567-312x231.jpg", "iron": 1, "name": "Greek Yogurt Parfait", "protein": 20, "vitaminC": 20}, "dinner": {"calcium": 60, "calories": 520, "carbs": 35, "description": "Herb-roasted chicken breast with sweet potato and green beans", "fat": 18, "id": "d3", "image": "https://img.spoonacular.com/recipes/642583-312x231.jpg", "iron": 3, "name": "Baked Chicken", "protein": 45, "vitaminC": 30}, "lunch": {"calcium": 150, "calories": 420, "carbs": 10, "description": "Fresh romaine lettuce with grilled chicken, parmesan, and homemade dressing", "fat": 25, "id": "l3", "image": "https://img.spoonacular.com/recipes/642583-312x231.jpg", "iron": 2, "name": "Chicken Caesar Salad", "protein": 35, "vitaminC": 25}}}');
+        
+        // Daily recommended values
+        const dailyRDA = {
+            vitaminC: 90,
+            iron: 18,
+            calcium: 1000
+        };
+        
+        let currentDayIndex = 0;
+        
+        // Populate days and meals
+        function populateMeals() {
+            const mealsContainer = document.getElementById('meals-container');
+            const dayId = days[currentDayIndex].toLowerCase();
+            mealsContainer.innerHTML =
+                createMealCard(dayId, 'breakfast', selectedMeals[dayId].breakfast) +
+                createMealCard(dayId, 'lunch', selectedMeals[dayId].lunch) +
+                createMealCard(dayId, 'dinner', selectedMeals[dayId].dinner);
+            // Add event listeners to swap buttons
+            document.querySelectorAll('.swap-btn').forEach(button => {
+                button.addEventListener('click', handleSwapClick);
+            });
+            // Update nutrition display
+            updateNutritionDisplay();
+        }
+        
+        // Handle swap button click
+        function handleSwapClick(e) {
+            const day = e.target.dataset.day;
+            const mealType = e.target.dataset.mealType;
+            
+            // Get current meal
+            const currentMeal = selectedMeals[day][mealType];
+            
+            // Get alternative meals (excluding current meal)
+            const alternatives = meals[mealType].filter(meal => meal.id !== currentMeal.id);
+            
+            // Randomly select a new meal
+            const randomIndex = Math.floor(Math.random() * alternatives.length);
+            const newMeal = alternatives[randomIndex];
+            
+            // Update selected meals
+            selectedMeals[day][mealType] = newMeal;
+            
+            // Repopulate meals to reflect changes
+            populateMeals();
+        }
+        
+        // Create meal card HTML
+        function createMealCard(dayId, mealType, meal) {
+            return `
+                <div class="meal-card">
+                    <img src="${meal.image}" alt="${meal.name}" class="meal-image">
+                    <div class="meal-content">
+                        <div class="meal-header">
+                            <span class="meal-title">${capitalizeFirstLetter(mealType)}: ${meal.name}</span>
+                        </div>
+                        <div class="meal-description">${meal.description}</div>
+                        <div class="meal-nutrition">
+                            <span class="nutrition-badge">${meal.calories} cal</span>
+                            <span class="nutrition-badge">${meal.protein}g protein</span>
+                            <span class="nutrition-badge">${meal.carbs}g carbs</span>
+                            <span class="nutrition-badge">${meal.fat}g fat</span>
+                        </div>
+                        <button class="swap-btn" data-day="${dayId}" data-meal-type="${mealType}">Swap Meal</button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Update nutrition display
+        function updateNutritionDisplay() {
+            let totalCalories = 0;
+            let totalProtein = 0;
+            let totalCarbs = 0;
+            let totalFat = 0;
+            let totalVitaminC = 0;
+            let totalIron = 0;
+            let totalCalcium = 0;
+            // Calculate totals for the current day only
+            const dayId = days[currentDayIndex].toLowerCase();
+            for (const mealType in selectedMeals[dayId]) {
+                const meal = selectedMeals[dayId][mealType];
+                totalCalories += meal.calories;
+                totalProtein += meal.protein;
+                totalCarbs += meal.carbs;
+                totalFat += meal.fat;
+                totalVitaminC += meal.vitaminC;
+                totalIron += meal.iron;
+                totalCalcium += meal.calcium;
+            }
+            
+            // Update summary
+            document.getElementById('total-calories').textContent = totalCalories;
+            document.getElementById('total-protein').textContent = `${totalProtein}g`;
+            document.getElementById('total-carbs').textContent = `${totalCarbs}g`;
+            document.getElementById('total-fat').textContent = `${totalFat}g`;
+            
+            // Calculate percentages
+            const totalGrams = totalProtein + totalCarbs + totalFat;
+            const proteinPercent = totalGrams ? Math.round((totalProtein / totalGrams) * 100) : 0;
+            const carbsPercent = totalGrams ? Math.round((totalCarbs / totalGrams) * 100) : 0;
+            const fatPercent = totalGrams ? Math.round((totalFat / totalGrams) * 100) : 0;
+            
+            // Update bars
+            document.getElementById('protein-bar').style.height = `${proteinPercent}%`;
+            document.getElementById('protein-percent').textContent = `${proteinPercent}%`;
+            
+            document.getElementById('carbs-bar').style.height = `${carbsPercent}%`;
+            document.getElementById('carbs-percent').textContent = `${carbsPercent}%`;
+            
+            document.getElementById('fat-bar').style.height = `${fatPercent}%`;
+            document.getElementById('fat-percent').textContent = `${fatPercent}%`;
+            
+            // Daily recommended values (RDA for a day)
+            const dailyVitaminC = dailyRDA.vitaminC; // mg per day
+            const dailyIron = dailyRDA.iron; // mg per day
+            const dailyCalcium = dailyRDA.calcium; // mg per day
+            
+            const vitaminCPercent = Math.min(100, Math.round((totalVitaminC / dailyVitaminC) * 100));
+            const ironPercent = Math.min(100, Math.round((totalIron / dailyIron) * 100));
+            const calciumPercent = Math.min(100, Math.round((totalCalcium / dailyCalcium) * 100));
+            
+            // Update micronutrient bars
+            document.getElementById('vitamin-c-bar').style.width = `${vitaminCPercent}%`;
+            document.getElementById('vitamin-c-percent').textContent = `${vitaminCPercent}%`;
+            
+            document.getElementById('iron-bar').style.width = `${ironPercent}%`;
+            document.getElementById('iron-percent').textContent = `${ironPercent}%`;
+            
+            document.getElementById('calcium-bar').style.width = `${calciumPercent}%`;
+            document.getElementById('calcium-percent').textContent = `${calciumPercent}%`;
+        }
+        
+        // Helper function to capitalize first letter
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add toggle functionality
+            function toggleSection(sectionId) {
+                const content = document.getElementById(`${sectionId}-content`);
+                const toggle = document.getElementById(`${sectionId}-toggle`);
+                
+                content.classList.toggle('collapsed');
+                toggle.classList.toggle('collapsed');
+            }
+            
+            // Make toggleSection available globally
+            window.toggleSection = toggleSection;
+            
+            function updateDayDisplay() {
+                const currentDayDisplay = document.getElementById('current-day-display');
+                const prevBtn = document.getElementById('prev-day');
+                const nextBtn = document.getElementById('next-day');
+                
+                // Update current day display
+                currentDayDisplay.textContent = days[currentDayIndex];
+                
+                // Update navigation buttons
+                prevBtn.disabled = currentDayIndex === 0;
+                nextBtn.disabled = currentDayIndex === days.length - 1;
+                
+                // Update meals display
+                populateMeals();
+            }
+            
+            // Add event listeners for navigation
+            document.getElementById('prev-day').addEventListener('click', () => {
+                if (currentDayIndex > 0) {
+                    currentDayIndex--;
+                    updateDayDisplay();
+                }
+            });
+            
+            document.getElementById('next-day').addEventListener('click', () => {
+                if (currentDayIndex < days.length - 1) {
+                    currentDayIndex++;
+                    updateDayDisplay();
+                }
+            });
+            
+            // Initial display
+            updateDayDisplay();
+        });
+    </script>
 </body>
 </html>
