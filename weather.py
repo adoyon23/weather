@@ -403,72 +403,31 @@ def validate_height_and_calculate_bmi(age: int, weight_kg: float, height_cm: flo
     Please thank the user for providing their information and share these results with them.
     """
 
-# Default template for rendering data
-DEFAULT_TEMPLATE = """
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ title }}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-        }
-        .data-item {
-            margin: 10px 0;
-            padding: 10px;
-            background-color: white;
-            border-radius: 4px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>{{ title }}</h1>
-        {% if items %}
-            {% for item in items %}
-                <div class="data-item">
-                    <h3>{{ item.name }}</h3>
-                    <p>{{ item.description }}</p>
-                    {% if item.value %}
-                        <p><strong>Value:</strong> {{ item.value }}</p>
-                    {% endif %}
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>No items to display.</p>
-        {% endif %}
-    </div>
-</body>
-</html>
-"""
+def load_template(template_path: str = "templates/default.html") -> str:
+    """Load a template from a file."""
+    try:
+        with open(template_path, 'r') as f:
+            return f.read()
+    except Exception as e:
+        logger.error(f"Error loading template: {str(e)}")
+        return ""
 
 @mcp.tool()
-async def serve_html_page(data: dict, template: str = DEFAULT_TEMPLATE, port: int = 8001) -> str:
+async def serve_html_page(data: dict, template_path: str = "templates/default.html", port: int = 8001) -> str:
     """Generate and serve an HTML webpage using Jinja2 templating.
     
     Args:
         data: A dictionary containing the data to be rendered in the template
-        template: Optional Jinja2 template string (uses default template if not provided)
+        template_path: Path to the Jinja2 template file (default: templates/default.html)
         port: The port number to serve the page on (default: 8001)
     """
     try:
-        # Create a Jinja2 template and render it with the provided data
-        template = Template(template)
+        # Load and create a Jinja2 template
+        template_content = load_template(template_path)
+        if not template_content:
+            return "Error: Could not load template file"
+            
+        template = Template(template_content)
         html_content = template.render(**data)
         
         # Create a temporary HTML file
