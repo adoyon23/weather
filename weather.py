@@ -642,6 +642,49 @@ async def search_recipes_by_ingredients(params: IngredientSearchParams) -> str:
         logger.error(f"Error searching recipes by ingredients: {str(e)}")
         return f"Error searching recipes by ingredients: {str(e)}"
 
+@mcp.tool()
+async def send_sms_message(phone_number: str, message: str) -> str:
+    """Send an SMS message using AWS SNS.
+    
+    Args:
+        phone_number: The phone number to send the message to (in E.164 format, e.g., +1234567890)
+        message: The text message to send
+    """
+    try:
+        # Initialize SNS client using the same session as DynamoDB
+        session = boto3.Session(profile_name='default')
+        sns = session.client('sns')
+        
+        # Send the message
+        response = sns.publish(
+            PhoneNumber=phone_number,
+            Message=message,
+            MessageAttributes={
+                'AWS.SNS.SMS.SenderID': {
+                    'DataType': 'String',
+                    'StringValue': 'WeatherApp'
+                },
+                'AWS.SNS.SMS.SMSType': {
+                    'DataType': 'String',
+                    'StringValue': 'Transactional'
+                }
+            }
+        )
+        
+        # Check if message was sent successfully
+        if response['ResponseMetadata']['HTTPStatusCode'] == 200:
+            return f"Message sent successfully! Message ID: {response['MessageId']}"
+        else:
+            return f"Failed to send message. Response: {response}"
+            
+    except ClientError as e:
+        error_message = e.response['Error']['Message']
+        logger.error(f"AWS SNS error: {error_message}")
+        return f"Error sending message: {error_message}"
+    except Exception as e:
+        logger.error(f"Unexpected error sending SMS: {str(e)}")
+        return f"Error sending message: {str(e)}"
+
 if __name__ == "__main__":
     # Initialize and run the server
     logger.info(f"Starting weather server on port {PORT}")
