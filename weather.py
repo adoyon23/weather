@@ -685,6 +685,56 @@ async def send_sms_message(phone_number: str, message: str) -> str:
         logger.error(f"Unexpected error sending SMS: {str(e)}")
         return f"Error sending message: {str(e)}"
 
+@mcp.prompt()
+def photo_booth_prompt() -> str:
+    """Prompt the LLM to guide the user through taking a photo/video with OBS and uploading it to S3"""
+    return """
+    Your task is to guide the user through taking a photo or video using OBS and uploading it to S3.
+    
+    Instructions:
+    1. First, open OBS by running the command: open -a "OBS"
+    2. Wait for the user to take a photo or video
+    3. After the user indicates they're done, find the newest file in the Movies directory using:
+       ls -t "/Users/andrewdoyon/Movies" | head -n 1
+    4. Upload the newest file to the S3 bucket 'vlog-journal' using the full path
+    5. Confirm the upload was successful
+    6. Close OBS by running the command: killall OBS
+    
+    Start by saying: "I'll help you take a photo or video using OBS. Let me open the app for you..."
+    """
+
+@mcp.tool()
+async def upload_to_s3(file_path: str, bucket_name: str = "vlog-journal") -> str:
+    """Upload a file to an S3 bucket.
+    
+    Args:
+        file_path: Local path to the file to upload
+        bucket_name: Name of the S3 bucket (default: vlog-journal)
+    """
+    try:
+        # Initialize S3 client using the same session as DynamoDB
+        session = boto3.Session(profile_name='default')
+        s3 = session.client('s3')
+        
+        # Get the filename from the path
+        file_name = os.path.basename(file_path)
+        
+        # Upload the file
+        s3.upload_file(file_path, bucket_name, file_name)
+        
+        # Generate the S3 URL
+        s3_url = f"s3://{bucket_name}/{file_name}"
+        
+        return f"File uploaded successfully to {s3_url}"
+        
+    except ClientError as e:
+        error_message = e.response['Error']['Message']
+        logger.error(f"AWS S3 error: {error_message}")
+        return f"Error uploading file: {error_message}"
+    except Exception as e:
+        logger.error(f"Unexpected error uploading to S3: {str(e)}")
+        return f"Error uploading file: {str(e)}"
+
 if __name__ == "__main__":
     # Initialize and run the server
     logger.info(f"Starting weather server on port {PORT}")
